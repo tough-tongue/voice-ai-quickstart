@@ -89,17 +89,12 @@ export function AuthCard({
       <CardContent>
         {mode === "choose" ? (
           <div className="space-y-4">
-            {/* Google Sign In */}
-            <Button
-              type="button"
-              variant="outline"
-              className={`w-full ${compact ? "h-10" : "h-12"} text-base`}
+            {/* Google Sign In - Standard Google branding */}
+            <GoogleSignInButton
               onClick={handleGoogleSignIn}
               disabled={loading}
-            >
-              <GoogleIcon className="mr-3 h-5 w-5" />
-              Continue with Google
-            </Button>
+              size={compact ? "default" : "large"}
+            />
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -113,12 +108,13 @@ export function AuthCard({
             {/* Local User */}
             <Button
               type="button"
-              variant="secondary"
-              className={`w-full ${compact ? "h-10" : "h-12"} text-base`}
+              variant="outline"
+              size={compact ? "lg" : "xl"}
+              className="w-full"
               onClick={() => setMode("local")}
               disabled={loading}
             >
-              <UserIcon className="mr-3 h-5 w-5" />
+              <UserIcon className="mr-2 h-5 w-5" />
               Continue as Guest
             </Button>
 
@@ -151,9 +147,8 @@ export function AuthCard({
 
             <Button
               type="submit"
-              className={`w-full ${
-                compact ? "h-10" : "h-12"
-              } text-base bg-teal-600 hover:bg-teal-700`}
+              size={compact ? "lg" : "xl"}
+              className="w-full"
               disabled={loading}
             >
               Get Started
@@ -162,6 +157,7 @@ export function AuthCard({
             <Button
               type="button"
               variant="ghost"
+              size="default"
               className="w-full"
               onClick={() => {
                 setMode("choose");
@@ -181,6 +177,51 @@ export function AuthCard({
         )}
       </CardContent>
     </Card>
+  );
+}
+
+// =============================================================================
+// Google Sign-In Button (follows Google brand guidelines)
+// =============================================================================
+
+interface GoogleSignInButtonProps {
+  onClick: () => void;
+  disabled?: boolean;
+  size?: "default" | "large";
+}
+
+/**
+ * Google Sign-In Button following Google's brand guidelines
+ * - White background with light border
+ * - Official Google "G" logo in full color
+ * - Roboto font styling (or system font fallback)
+ */
+function GoogleSignInButton({ onClick, disabled, size = "default" }: GoogleSignInButtonProps) {
+  const isLarge = size === "large";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`
+        w-full flex items-center justify-center gap-3
+        ${isLarge ? "h-12 text-base" : "h-10 text-sm"}
+        px-4 rounded-md font-medium
+        bg-white text-[#3c4043] 
+        border border-[#dadce0]
+        shadow-sm
+        transition-all duration-200
+        hover:bg-[#f8f9fa] hover:border-[#d2d4d7] hover:shadow
+        active:bg-[#f1f3f4]
+        focus:outline-none focus:ring-2 focus:ring-[#4285f4]/30 focus:border-[#4285f4]
+        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:shadow-sm
+        cursor-pointer
+      `}
+    >
+      <GoogleIcon className={isLarge ? "h-5 w-5" : "h-4 w-4"} />
+      <span>Sign in with Google</span>
+    </button>
   );
 }
 

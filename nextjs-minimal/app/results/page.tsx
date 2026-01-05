@@ -554,8 +554,9 @@ function SessionInfoCard({
             {hasReportCard ? (
               <Button
                 onClick={onMarkAsFinal}
-                variant={isFinal ? "secondary" : "outline"}
+                variant="outline"
                 disabled={isFinal}
+                className={isFinal ? "bg-accent" : ""}
               >
                 <Star
                   className={`h-4 w-4 mr-2 ${isFinal ? "fill-yellow-400 text-yellow-400" : ""}`}
