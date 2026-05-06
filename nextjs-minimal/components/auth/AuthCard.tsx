@@ -191,10 +191,8 @@ interface GoogleSignInButtonProps {
 }
 
 /**
- * Google Sign-In Button following Google's brand guidelines
- * - White background with light border
- * - Official Google "G" logo in full color
- * - Roboto font styling (or system font fallback)
+ * Google Sign-In Button
+ * Uses site theme colors with the official Google "G" logo
  */
 function GoogleSignInButton({ onClick, disabled, size = "default" }: GoogleSignInButtonProps) {
   const isLarge = size === "large";
@@ -207,15 +205,15 @@ function GoogleSignInButton({ onClick, disabled, size = "default" }: GoogleSignI
       className={`
         w-full flex items-center justify-center gap-3
         ${isLarge ? "h-12 text-base" : "h-10 text-sm"}
-        px-4 rounded-md font-medium
-        bg-white text-[#3c4043] 
-        border border-[#dadce0]
+        px-4 rounded-lg font-medium
+        bg-secondary text-foreground
+        border-2 border-border
         shadow-sm
         transition-all duration-200
-        hover:bg-[#f8f9fa] hover:border-[#d2d4d7] hover:shadow
-        active:bg-[#f1f3f4]
-        focus:outline-none focus:ring-2 focus:ring-[#4285f4]/30 focus:border-[#4285f4]
-        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:shadow-sm
+        hover:bg-accent hover:border-teal-500/50
+        active:bg-accent/80
+        focus:outline-none focus:ring-2 focus:ring-ring/50
+        disabled:opacity-50 disabled:cursor-not-allowed
         cursor-pointer
       `}
     >
