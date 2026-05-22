@@ -55,7 +55,7 @@ function CoachContent() {
           scenarioId: SCENARIOS.PERSONALITY_COACH,
           scenario_id: event.data.scenario_id,
           created_at: new Date().toISOString(),
-          status: "active",
+          status: "in_progress",
         });
       },
       onStop: (event) => {

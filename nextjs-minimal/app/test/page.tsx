@@ -50,7 +50,7 @@ function TestContent() {
           scenarioId: SCENARIOS.PERSONALITY_TEST,
           scenario_id: event.data.scenario_id,
           created_at: new Date().toISOString(),
-          status: "active",
+          status: "in_progress",
         });
       },
       onStop: (event) => {
@@ -211,9 +211,8 @@ function TestLandingView({
           </CardTitle>
           <CardDescription>
             {hasExistingSessions
-              ? `You have ${sessionCount} previous session${
-                  sessionCount > 1 ? "s" : ""
-                }. Start a new assessment or view your results.`
+              ? `You have ${sessionCount} previous session${sessionCount > 1 ? "s" : ""
+              }. Start a new assessment or view your results.`
               : "Have a conversation with our AI to uncover your unique personality type"}
           </CardDescription>
         </CardHeader>

@@ -1,0 +1,87 @@
+# ToughTongue AI Scenario
+# Full reference example — all supported fields annotated.
+# Remove fields you don't need. Only `name` and `ai_instructions` are required.
+#
+# After `ttcli push`, the `id` field is written back automatically.
+# Commit this file to version-control your scenario definitions.
+---
+
+# id is written back by ttcli push after creation.
+# Leave blank for new scenarios; set to an existing ID to update.
+id: ""
+
+# ------------------------------------------------------------------------------
+# Core fields
+# ------------------------------------------------------------------------------
+
+name: "Cold Call Practice — VP of Engineering"
+
+description: "Internal note: Sales team cold-call training for SaaS prospects."
+
+# What the end-user sees on the scenario landing page (optional)
+user_friendly_description: "Practice a cold call with an AI-powered skeptical VP of Engineering."
+
+# The AI agent's full system instructions.
+# Use the block scalar (|-) for multi-line content.
+ai_instructions: |-
+  You are Alex Chen, VP of Engineering at a mid-size SaaS company.
+  You are skeptical of cold calls and protective of your team's time.
+
+  Behavior:
+  - Start mildly annoyed — you're in the middle of something.
+  - Push back on vague claims. Ask "how exactly does that work?"
+  - If the rep earns your attention, slowly warm up.
+  - Never be rude, but be direct and impatient with fluff.
+  - After 3–5 minutes, either agree to a follow-up or end the call politely.
+
+  Do NOT end the call unless the rep has had at least 2 minutes to speak.
+
+# Scoring rubric for session analysis.
+# The AI evaluator uses this to generate feedback.
+rubrik: |-
+  Score the rep on:
+  1. Opening hook (0–20): Did they earn attention in the first 30 seconds?
+  2. Discovery (0–25): Did they ask good questions before pitching?
+  3. Handling objections (0–25): Did they respond to pushback naturally?
+  4. Clear ask (0–20): Did they end with a specific, low-friction next step?
+  5. Tone (0–10): Professional, confident, not robotic.
+
+# ------------------------------------------------------------------------------
+# Access control
+# ------------------------------------------------------------------------------
+
+is_public: true          # true = embeddable without a SAT token
+is_recording: true       # record audio for analysis
+
+# If true, users cannot see their own analysis results (only admins can)
+restrict_analysis: false
+
+# ------------------------------------------------------------------------------
+# Appearance (optional)
+# ------------------------------------------------------------------------------
+
+appearance:
+  # AI voice. Options: Aoede, Charon, Fenrir, Kore, Puck
+  voice: "Charon"
+  # Custom avatar image URL (optional)
+  # avatar_url: "https://example.com/avatar.png"
+
+# ------------------------------------------------------------------------------
+# Session analysis (optional)
+# ------------------------------------------------------------------------------
+
+session_analysis:
+  # Auto-trigger analysis when session ends (uses API minutes)
+  is_auto_analysis: false
+  # Send analysis report to these emails (comma-separated)
+  # admin_email: "coach@yourcompany.com"
+
+# ------------------------------------------------------------------------------
+# Memory (optional)
+# ------------------------------------------------------------------------------
+
+memory:
+  # Enable persistent memory across sessions for the same user
+  is_memory: false
+  # Prompt used to generate a memory summary after each session
+  # short_mem_prompt: "Summarize what the user practiced and how they performed."
