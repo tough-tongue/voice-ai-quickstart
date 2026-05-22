@@ -4,39 +4,22 @@ Official documentation and starter templates for [ToughTongue AI](https://tought
 
 ## What's Inside
 
-- **`docs/`** — Complete documentation site built with Mintlify
+> **⚠️ `docs/` is deprecated.** The Mintlify documentation site has moved.
+> Documentation is now maintained externally. The `docs/` directory remains
+> for historical reference but is no longer actively updated or deployed.
+
 - **`nextjs-minimal/`** — Production-ready Next.js starter with Firebase auth
 - **`flask-minimal/`** — Simple Flask starter with iframe embedding
+- **`starter-prompts/`** — One-shot prompts to generate working ToughTongue AI apps
+- **`scenario-manager/`** — `ttcli`: sync YAML scenario definitions to the ToughTongue API
+- ~~**`docs/`** — Mintlify documentation site (deprecated)~~
 
-## 📚 Documentation
+## ~~📚 Documentation~~ (Deprecated)
 
-> **📖 For detailed documentation developer guide, see [docs/README.md](docs/README.md)**
-
-### Run Locally
-
-```bash
-cd docs
-pnpm install
-pnpm dev
-```
-
-Docs will be available at `http://localhost:3000`
-
-### Structure
-
-- **Get Started** — Introduction and quickstart
-- **Product Documentation** — Features, enterprise, integrations
-- **Developer Documentation** — API, iframe embedding, guides
-- **API Reference** — Interactive API playground with OpenAPI spec
-- **Starter Templates** — Next.js and Flask guides
-
-### Configuration
-
-Documentation is configured via `mint.json` (Mintlify format). Navigation, branding, and API settings are all in this file.
-
-### Deploy
-
-The documentation is designed to be deployed to Mintlify's platform. See [Mintlify documentation](https://mintlify.com/docs) for deployment instructions.
+> **⚠️ The `docs/` directory is deprecated.** The Mintlify documentation site
+> is no longer actively maintained in this repo.
+>
+> For current documentation see: [docs.toughtongueai.com](https://docs.toughtongueai.com)
 
 ## 🚀 Next.js Starter
 
@@ -119,34 +102,24 @@ Server runs at `http://localhost:5001`
 
 ```
 /
-├── docs/                           # Mintlify documentation
-│   ├── getting-started/           # Introduction & quickstart
-│   ├── product/                   # Product features
-│   ├── developer/                 # API & integration guides
-│   ├── guides/                    # Webhooks, troubleshooting
-│   ├── starters/                  # Starter template docs
-│   ├── api-reference/             # OpenAPI spec & endpoints
-│   ├── use-cases/                 # Sales, courses, etc.
-│   └── docs.json                  # Mintlify configuration
-│
-├── nextjs-minimal/                # Next.js starter
-│   ├── app/                       # App router pages
-│   │   ├── auth/                  # Firebase auth context & pages
-│   │   ├── analysis/              # Session analysis page
-│   │   ├── course/                # Multi-scenario course example
-│   │   └── api/                   # API routes (proxy)
+├── nextjs-minimal/                # Next.js 16.1+ starter (Firebase, shadcn/ui)
+│   ├── app/                       # App router pages + API routes
 │   ├── components/                # React components
-│   ├── lib/                       # Firebase & utilities
-│   └── package.json
+│   └── lib/                       # ttai client, config, store
 │
-├── flask-minimal/                 # Flask starter
-│   ├── api/                       # API routes
-│   ├── templates/                 # HTML templates
-│   ├── www/                       # Frontend assets
-│   ├── app.py                     # Flask server
-│   └── requirements.txt
+├── flask-minimal/                 # Flask + Preact minimal starter
+│   ├── api/                       # API proxy routes
+│   └── www/                       # Frontend assets (no build tools)
 │
-└── 0ven/                          # Internal docs (gitignored)
+├── starter-prompts/               # One-shot prompts → working TT AI apps (6 prompts)
+│
+├── scenario-manager/              # ttcli — YAML-driven scenario sync
+│   ├── ttcli                      # Bash CLI (bash 4+, curl, python3)
+│   └── scenarios/                 # Your scenario YAML definitions
+│
+├── docs/                          # [DEPRECATED] Mintlify documentation
+│
+└── _0ven/                         # Internal notes (gitignored)
 ```
 
 ## 🔑 Getting Your API Key
@@ -156,13 +129,40 @@ Server runs at `http://localhost:5001`
 3. Create a new API key
 4. Copy and securely store your token
 
+## 🛠 Scenario Manager
+
+Manage ToughTongue AI scenarios as version-controlled YAML files.
+
+```bash
+export TTAI_PAT_TOKEN="your_api_key"
+export PATH="$PATH:$(pwd)/scenario-manager"
+
+ttcli list                                      # list all your scenarios
+ttcli push scenarios/cold-call.yml              # create or update
+ttcli pull 69577496bd7c000fa3f4fc2a             # pull remote → local YAML
+ttcli diff scenarios/cold-call.yml              # preview changes
+```
+
+See [`scenario-manager/README.md`](scenario-manager/README.md) for full docs,
+YAML format reference, and GitHub Actions CI/CD example.
+
+## 🚀 Starter Prompts
+
+One-shot prompts for [Lovable](https://lovable.dev), [v0](https://v0.dev), and [Bolt](https://bolt.new)
+that generate fully working ToughTongue AI apps in a single paste.
+
+| Prompt                                                                                         | Use Case                                                         |
+| ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [`personality-assessment-lovable.md`](starter-prompts/personality-assessment-lovable.md)       | MBTI test + AI personality coach                                 |
+| [`interview-coach-lovable.md`](starter-prompts/interview-coach-lovable.md)                     | Resume-aware interview practice                                  |
+| [`sales-training-lovable.md`](starter-prompts/sales-training-lovable.md)                       | Cold call + objection handling training                          |
+| [`negotiation-trainer-lovable.md`](starter-prompts/negotiation-trainer-lovable.md)             | Salary & deal negotiation practice                               |
+| [`customer-support-training-lovable.md`](starter-prompts/customer-support-training-lovable.md) | Support rep training — angry customers, refunds, escalations     |
+| [`leadership-coaching-lovable.md`](starter-prompts/leadership-coaching-lovable.md)             | Manager coaching — feedback, conflict, stakeholder conversations |
+
+See [`starter-prompts/README.md`](starter-prompts/README.md) for usage instructions.
+
 ## 🚢 Deployment
-
-### Documentation
-
-Deploy to Mintlify's platform for best results. Alternatively, use Vercel with the included `vercel.json`.
-
-### Starter Templates
 
 Both templates include `vercel.json` for one-click Vercel deployment:
 
@@ -179,14 +179,11 @@ Remember to add environment variables in your deployment platform.
 
 ## 📋 Contributing
 
-See `.cursor/rules/nextjs-starter.mdc` for development guidelines specific to the Next.js starter.
+See `AGENTS.md` for repo-wide agent rules and area guides.
 
-For documentation contributions:
-
-- Follow Mintlify MDX conventions
-- Keep line lengths under ~100 characters
-- Use relative paths for API references
-- Test locally before submitting
+- **Next.js starter** — see `nextjs-minimal/AGENTS.md`
+- **Flask starter** — see `flask-minimal/AGENTS.md`
+- **Docs site** — see `docs/AGENTS.md` (note: docs/ is deprecated)
 
 ## 📞 Support
 
@@ -200,4 +197,4 @@ MIT — See individual directories for details.
 
 ---
 
-**Ready to build?** Start with the [quickstart guide](docs/getting-started/quickstart.mdx) or dive into a starter template above.
+**Ready to build?** Start with a [starter prompt](starter-prompts/README.md) or clone a starter template.

@@ -208,9 +208,8 @@ function SessionRow({
 
   return (
     <tr
-      className={`border-b border-border/50 hover:bg-muted/30 cursor-pointer ${
-        isSelected ? "bg-teal-500/10" : ""
-      }`}
+      className={`border-b border-border/50 hover:bg-muted/30 cursor-pointer ${isSelected ? "bg-teal-500/10" : ""
+        }`}
       onClick={onSelect}
     >
       <td className="py-3 px-2">
@@ -235,7 +234,7 @@ function SessionRow({
         </div>
       </td>
       <td className="py-3 px-2">{session.user_name || session.user_email || "-"}</td>
-      <td className="py-3 px-2">{formatDuration(session.duration)}</td>
+      <td className="py-3 px-2">{formatDuration(session.duration_minutes != null ? session.duration_minutes * 60 : undefined)}</td>
       <td className="py-3 px-2">
         <span className={`flex items-center gap-1 ${getStatusColor(session.status)}`}>
           {StatusIcon ? <StatusIcon className="h-4 w-4" /> : null}

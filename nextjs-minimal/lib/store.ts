@@ -49,7 +49,7 @@ export interface SessionDetails {
   // From API
   scenario_id?: string;
   scenario_name?: string;
-  status?: "active" | "completed" | "cancelled" | "terminated";
+  status?: "in_progress" | "completed" | "terminated";
   created_at?: string;
   completed_at?: string;
   user_name?: string;

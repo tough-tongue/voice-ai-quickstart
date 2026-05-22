@@ -45,9 +45,8 @@ export function getStatusColor(status: string): string {
   switch (status) {
     case "completed":
       return "text-green-400";
-    case "active":
+    case "in_progress":
       return "text-blue-400";
-    case "cancelled":
     case "terminated":
       return "text-red-400";
     default:
@@ -62,9 +61,8 @@ export function getStatusIcon(status: string) {
   switch (status) {
     case "completed":
       return CheckCircle;
-    case "active":
+    case "in_progress":
       return Play;
-    case "cancelled":
     case "terminated":
       return XCircle;
     default:

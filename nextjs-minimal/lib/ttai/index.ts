@@ -22,17 +22,25 @@ export type {
   IframeEventType,
   IframeStartEvent,
   IframeStopEvent,
+  IframeTerminatedEvent,
+  IframeSubmitEvent,
   IframeErrorEvent,
   IframeReadyEvent,
   // Embed types
+  EmbedStyle,
   EmbedUrlOptions,
   // SAT types
   CreateSATRequest,
   SATResponse,
   SATEmbedOptions,
+  // Session notes
+  SessionNote,
   // Response types (for consuming API responses)
   SessionAnalysis,
   SessionListItem,
+  SessionDetail,
+  SessionV2,
+  ReportCardItem,
   Balance,
 } from "./types";
 
@@ -49,4 +57,6 @@ export {
   getEmbedUrlWithSAT,
   // Event handling
   createIframeEventListener,
+  // Evaluator → iframe
+  sendSessionNotes,
 } from "./client";

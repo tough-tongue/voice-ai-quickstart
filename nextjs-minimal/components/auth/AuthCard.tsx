@@ -198,28 +198,17 @@ function GoogleSignInButton({ onClick, disabled, size = "default" }: GoogleSignI
   const isLarge = size === "large";
 
   return (
-    <button
+    <Button
       type="button"
+      variant="outline"
+      size={isLarge ? "xl" : "lg"}
       onClick={onClick}
       disabled={disabled}
-      className={`
-        w-full flex items-center justify-center gap-3
-        ${isLarge ? "h-12 text-base" : "h-10 text-sm"}
-        px-4 rounded-lg font-medium
-        bg-secondary text-foreground
-        border-2 border-border
-        shadow-sm
-        transition-all duration-200
-        hover:bg-accent hover:border-teal-500/50
-        active:bg-accent/80
-        focus:outline-none focus:ring-2 focus:ring-ring/50
-        disabled:opacity-50 disabled:cursor-not-allowed
-        cursor-pointer
-      `}
+      className="w-full gap-3 border-2"
     >
       <GoogleIcon className={isLarge ? "h-5 w-5" : "h-4 w-4"} />
       <span>Sign in with Google</span>
-    </button>
+    </Button>
   );
 }
 

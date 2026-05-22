@@ -1,0 +1,519 @@
+#!/usr/bin/env bash
+# ttcli — ToughTongue AI scenario manager
+# Sync YAML scenario definitions → ToughTongue AI API
+#
+# Usage:
+#   ttcli push [scenario.yml ...]   push one or more scenario files
+#   ttcli pull <scenario_id>        pull a remote scenario into a local YAML file
+#   ttcli list                      list all scenarios in your account
+#   ttcli diff <scenario.yml>       show what would change without applying
+#   ttcli delete <scenario_id>      delete a scenario (prompts for confirmation)
+#
+# Auth:
+#   TTAI_PAT_TOKEN  — required. Personal Access Token from
+#                     https://app.toughtongueai.com/developer?tab=api-keys
+#   TTAI_ORG_ID     — optional. Org ID for org-scoped scenarios.
+#
+# Requires: bash 4+, curl, python3 (stdlib only)
+
+set -euo pipefail
+
+# ------------------------------------------------------------------------------
+# Constants
+# ------------------------------------------------------------------------------
+
+API_BASE="https://api.toughtongueai.com/api/public"
+SCENARIOS_DIR="${TTCLI_SCENARIOS_DIR:-scenarios}"
+VERSION="0.1.0"
+
+# ------------------------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------------------------
+
+die()    { echo "❌  $*" >&2; exit 1; }
+info()   { echo "ℹ️   $*"; }
+ok()     { echo "✅  $*"; }
+warn()   { echo "⚠️   $*" >&2; }
+
+require_token() {
+  [[ -z "${TTAI_PAT_TOKEN:-}" ]] && die "TTAI_PAT_TOKEN is not set.\nGet one at: https://app.toughtongueai.com/developer?tab=api-keys"
+}
+
+auth_header() {
+  echo "Authorization: Bearer ${TTAI_PAT_TOKEN}"
+}
+
+org_header() {
+  [[ -n "${TTAI_ORG_ID:-}" ]] && echo "X-Org-ID: ${TTAI_ORG_ID}" || true
+}
+
+# Build curl flags: auth + optional org header + JSON content-type
+curl_flags() {
+  local -a flags=(-sS -H "$(auth_header)" -H "Content-Type: application/json" --fail-with-body)
+  [[ -n "${TTAI_ORG_ID:-}" ]] && flags+=(-H "X-Org-ID: ${TTAI_ORG_ID}")
+  printf '%s\n' "${flags[@]}"
+}
+
+# Inline Python to convert YAML → JSON (stdlib only — no PyYAML needed)
+yaml_to_json() {
+  python3 - "$1" <<'PYEOF'
+import sys, json, re
+
+def parse_yaml_simple(text):
+    """
+    Minimal YAML → dict parser for the ttcli scenario schema.
+    Handles: scalars, quoted strings, booleans, nulls, nested mappings,
+    block scalars (|, |-), inline lists (- item).
+    Not a full YAML parser — designed for scenario.yml shape only.
+    """
+    lines = text.splitlines()
+    return parse_block(lines, 0, 0)[0]
+
+def parse_block(lines, start, base_indent):
+    obj = {}
+    i = start
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.rstrip()
+        if not stripped or stripped.lstrip().startswith('#'):
+            i += 1
+            continue
+        indent = len(stripped) - len(stripped.lstrip())
+        if indent < base_indent:
+            break
+        if indent > base_indent:
+            i += 1
+            continue
+
+        # Key: value on same line, or key: followed by block
+        m = re.match(r'^(\s*)([^:]+):\s*(.*)', stripped)
+        if not m:
+            i += 1
+            continue
+        key = m.group(2).strip()
+        val_str = m.group(3).strip()
+
+        # Block scalar (| or |-)
+        if val_str in ('|', '|-', '>'):
+            block_lines = []
+            i += 1
+            child_indent = None
+            while i < len(lines):
+                bl = lines[i]
+                if not bl.strip():
+                    block_lines.append('')
+                    i += 1
+                    continue
+                ci = len(bl) - len(bl.lstrip())
+                if child_indent is None:
+                    child_indent = ci
+                if ci < child_indent:
+                    break
+                block_lines.append(bl[child_indent:])
+                i += 1
+            text = '\n'.join(block_lines)
+            if val_str == '|-':
+                text = text.rstrip('\n')
+            obj[key] = text
+            continue
+
+        # Empty value → nested block
+        if val_str == '':
+            i += 1
+            # Peek: list or nested mapping?
+            if i < len(lines):
+                peek = lines[i]
+                if peek.lstrip().startswith('- '):
+                    # Sequence
+                    items = []
+                    while i < len(lines):
+                        pl = lines[i]
+                        if not pl.strip() or pl.lstrip().startswith('#'):
+                            i += 1
+                            continue
+                        ci = len(pl) - len(pl.lstrip())
+                        if ci <= indent:
+                            break
+                        if pl.lstrip().startswith('- '):
+                            items.append(pl.lstrip()[2:].strip())
+                            i += 1
+                        else:
+                            break
+                    obj[key] = items
+                else:
+                    child_indent = len(lines[i]) - len(lines[i].lstrip()) if lines[i].strip() else indent + 2
+                    nested, i = parse_block(lines, i, child_indent)
+                    obj[key] = nested
+            continue
+
+        obj[key] = parse_scalar(val_str)
+        i += 1
+    return obj, i
+
+def parse_scalar(s):
+    if s.startswith('"') and s.endswith('"'):
+        return s[1:-1]
+    if s.startswith("'") and s.endswith("'"):
+        return s[1:-1]
+    if s.lower() in ('true', 'yes'):
+        return True
+    if s.lower() in ('false', 'no'):
+        return False
+    if s.lower() in ('null', '~', ''):
+        return None
+    try:
+        return int(s)
+    except ValueError:
+        pass
+    try:
+        return float(s)
+    except ValueError:
+        pass
+    return s
+
+with open(sys.argv[1]) as f:
+    text = f.read()
+
+data = parse_yaml_simple(text)
+print(json.dumps(data))
+PYEOF
+}
+
+# Pretty-print JSON (stdlib only)
+pretty_json() {
+  python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=2))"
+}
+
+# Extract a field from JSON response
+jq_get() {
+  local field=$1
+  python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('${field}',''))"
+}
+
+# Convert a remote scenario JSON → scenario.yml
+json_to_yaml() {
+  python3 - <<'PYEOF'
+import sys, json
+
+data = json.load(sys.stdin)
+
+def scalar(v):
+    if v is None: return 'null'
+    if isinstance(v, bool): return str(v).lower()
+    if isinstance(v, (int, float)): return str(v)
+    # Multi-line: use block scalar
+    if '\n' in str(v):
+        return None  # handled separately
+    return f'"{v}"'
+
+def emit_field(key, val, indent=0):
+    pad = '  ' * indent
+    if val is None:
+        return f'{pad}{key}: null'
+    if isinstance(val, bool):
+        return f'{pad}{key}: {str(val).lower()}'
+    if isinstance(val, (int, float)):
+        return f'{pad}{key}: {val}'
+    if isinstance(val, dict):
+        lines = [f'{pad}{key}:']
+        for k, v in val.items():
+            lines.append(emit_field(k, v, indent + 1))
+        return '\n'.join(lines)
+    if isinstance(val, list):
+        if not val: return f'{pad}{key}: []'
+        lines = [f'{pad}{key}:']
+        for item in val:
+            lines.append(f'{pad}  - {item}')
+        return '\n'.join(lines)
+    s = str(val)
+    if '\n' in s:
+        block = '\n'.join(f'{pad}  {line}' for line in s.split('\n'))
+        return f'{pad}{key}: |-\n{block}'
+    return f'{pad}{key}: "{s}"'
+
+# Order fields for readability
+FIELD_ORDER = ['id', 'name', 'description', 'ai_instructions', 'user_friendly_description',
+               'rubrik', 'is_public', 'is_recording', 'restrict_analysis',
+               'appearance', 'session_analysis', 'memory', 'ai_model_config']
+
+lines = ['# ToughTongue AI Scenario', '# Generated by ttcli pull', '---']
+seen = set()
+for key in FIELD_ORDER:
+    if key in data and data[key] is not None:
+        lines.append(emit_field(key, data[key]))
+        seen.add(key)
+for key, val in data.items():
+    if key not in seen and val is not None and key not in ('created_at','updated_at','pricing','tools_config'):
+        lines.append(emit_field(key, val))
+
+print('\n'.join(lines))
+PYEOF
+}
+
+api_get()  { curl $(curl_flags) "${API_BASE}${1}"; }
+api_post() { curl $(curl_flags) -X POST  -d "$2" "${API_BASE}${1}"; }
+api_patch(){ curl $(curl_flags) -X PATCH -d "$2" "${API_BASE}${1}"; }
+
+# ------------------------------------------------------------------------------
+# Commands
+# ------------------------------------------------------------------------------
+
+cmd_list() {
+  require_token
+  info "Fetching scenarios…"
+  local response
+  response=$(api_get "/scenarios")
+  python3 - <<PYEOF
+import json, sys
+data = json.loads('''${response}''')
+scenarios = data.get('scenarios', [])
+if not scenarios:
+    print("  (no scenarios found)")
+    sys.exit(0)
+print(f"{'ID':<28} {'NAME':<40} {'PUBLIC'}")
+print("-" * 75)
+for s in scenarios:
+    pub = "yes" if s.get('is_public') else "no "
+    print(f"{s.get('id',''):<28} {s.get('name',''):<40} {pub}")
+PYEOF
+}
+
+cmd_pull() {
+  require_token
+  local scenario_id="${1:-}"
+  [[ -z "$scenario_id" ]] && die "Usage: ttcli pull <scenario_id> [output.yml]"
+  local outfile="${2:-${SCENARIOS_DIR}/${scenario_id}.yml}"
+
+  info "Pulling scenario ${scenario_id}…"
+  local response
+  response=$(api_get "/scenarios/${scenario_id}")
+
+  # Check for error
+  echo "$response" | python3 -c "
+import sys, json
+d = json.loads(sys.stdin.read())
+if 'error' in d:
+    print(f'API error: {d[\"error\"]}', file=sys.stderr)
+    sys.exit(1)
+" || die "Failed to pull scenario ${scenario_id}"
+
+  mkdir -p "$(dirname "$outfile")"
+  echo "$response" | json_to_yaml > "$outfile"
+  ok "Saved to ${outfile}"
+}
+
+cmd_push() {
+  require_token
+  local files=("$@")
+  [[ ${#files[@]} -eq 0 ]] && {
+    # Default: all .yml files in $SCENARIOS_DIR
+    mapfile -t files < <(find "$SCENARIOS_DIR" -name "*.yml" 2>/dev/null | sort)
+    [[ ${#files[@]} -eq 0 ]] && die "No scenario files found in ${SCENARIOS_DIR}/. Pass file paths or set TTCLI_SCENARIOS_DIR."
+  }
+
+  local pushed=0 failed=0
+  for yml_file in "${files[@]}"; do
+    [[ -f "$yml_file" ]] || { warn "File not found: ${yml_file}"; ((failed++)); continue; }
+    info "Pushing ${yml_file}…"
+
+    local json_body
+    json_body=$(yaml_to_json "$yml_file") || { warn "Failed to parse ${yml_file}"; ((failed++)); continue; }
+
+    # Extract id from parsed JSON to decide create vs update
+    local scenario_id
+    scenario_id=$(echo "$json_body" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('id') or '')")
+
+    local response
+    if [[ -z "$scenario_id" ]]; then
+      # Create
+      response=$(api_post "/scenarios" "$json_body")
+    else
+      # Update via POST upsert (id in body)
+      response=$(api_post "/scenarios" "$json_body")
+    fi
+
+    # Parse response: extract id and name
+    local result
+    result=$(echo "$response" | python3 -c "
+import sys, json
+d = json.loads(sys.stdin.read())
+if 'error' in d:
+    print(f'ERROR: {d[\"error\"]}')
+    sys.exit(1)
+sid = d.get('id','?')
+name = d.get('name','?')
+print(f'{sid}|{name}')
+" 2>&1) || { warn "API error for ${yml_file}: ${result}"; ((failed++)); continue; }
+
+    local new_id new_name
+    new_id="${result%%|*}"
+    new_name="${result##*|}"
+
+    # Write back id to the YAML file if it was missing
+    if [[ -z "$scenario_id" && -n "$new_id" ]]; then
+      python3 - "$yml_file" "$new_id" <<'PYEOF'
+import sys, re
+
+path, new_id = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    content = f.read()
+
+# Insert id: "<new_id>" after the --- or at the top
+if re.search(r'^id:', content, re.MULTILINE):
+    content = re.sub(r'^id:.*$', f'id: "{new_id}"', content, flags=re.MULTILINE)
+elif '---' in content:
+    content = content.replace('---', f'---\nid: "{new_id}"', 1)
+else:
+    content = f'id: "{new_id}"\n' + content
+
+with open(path, 'w') as f:
+    f.write(content)
+PYEOF
+      info "  → Created. ID written back to ${yml_file}"
+    fi
+
+    ok "Pushed: ${new_name} (${new_id})"
+    ((pushed++))
+  done
+
+  echo ""
+  info "Done. ${pushed} pushed, ${failed} failed."
+  [[ $failed -gt 0 ]] && exit 1 || true
+}
+
+cmd_diff() {
+  require_token
+  local yml_file="${1:-}"
+  [[ -z "$yml_file" ]] && die "Usage: ttcli diff <scenario.yml>"
+  [[ -f "$yml_file" ]] || die "File not found: ${yml_file}"
+
+  local json_body scenario_id
+  json_body=$(yaml_to_json "$yml_file")
+  scenario_id=$(echo "$json_body" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('id') or '')")
+
+  if [[ -z "$scenario_id" ]]; then
+    info "No id in ${yml_file} — this would CREATE a new scenario."
+    info "Local definition:"
+    echo "$json_body" | pretty_json
+    return
+  fi
+
+  info "Fetching remote scenario ${scenario_id}…"
+  local remote_json
+  remote_json=$(api_get "/scenarios/${scenario_id}")
+
+  python3 - "$yml_file" <<PYEOF
+import sys, json
+
+local_path = sys.argv[1]
+remote = json.loads('''${remote_json}''')
+local_raw = json.loads('''${json_body}''')
+
+COMPARABLE = ['name','description','ai_instructions','user_friendly_description',
+              'rubrik','is_public','is_recording','restrict_analysis']
+
+changed = []
+for key in COMPARABLE:
+    local_val = local_raw.get(key)
+    remote_val = remote.get(key)
+    if local_val != remote_val and not (local_val is None and remote_val is None):
+        changed.append((key, remote_val, local_val))
+
+if not changed:
+    print("✅  No differences — local matches remote.")
+else:
+    print(f"Found {len(changed)} change(s):\n")
+    for key, old, new in changed:
+        print(f"  {key}:")
+        old_s = str(old)[:120] + ('…' if len(str(old)) > 120 else '')
+        new_s = str(new)[:120] + ('…' if len(str(new)) > 120 else '')
+        print(f"    remote: {old_s}")
+        print(f"    local:  {new_s}")
+        print()
+PYEOF
+}
+
+cmd_delete() {
+  require_token
+  local scenario_id="${1:-}"
+  [[ -z "$scenario_id" ]] && die "Usage: ttcli delete <scenario_id>"
+
+  warn "You are about to delete scenario: ${scenario_id}"
+  read -rp "  Type the scenario ID to confirm: " confirm
+  [[ "$confirm" != "$scenario_id" ]] && { info "Aborted."; exit 0; }
+
+  info "Deleting ${scenario_id}…"
+  local response
+  response=$(curl $(curl_flags) -X DELETE "${API_BASE}/scenarios/${scenario_id}")
+  ok "Deleted: ${scenario_id}"
+}
+
+cmd_help() {
+  cat <<HELP
+ttcli v${VERSION} — ToughTongue AI scenario manager
+
+USAGE
+  ttcli <command> [args]
+
+COMMANDS
+  list                        List all scenarios in your account
+  push [file.yml ...]         Push scenario YAML files (creates or updates)
+                              Default: all .yml files in ./scenarios/
+  pull <id> [output.yml]      Pull a remote scenario into a local YAML file
+  diff <file.yml>             Show what would change without pushing
+  delete <id>                 Delete a scenario (requires confirmation)
+
+AUTH ENVIRONMENT VARIABLES
+  TTAI_PAT_TOKEN              Required. API key from Developer Portal.
+  TTAI_ORG_ID                 Optional. Org ID for org-scoped scenarios.
+
+OTHER VARIABLES
+  TTCLI_SCENARIOS_DIR         Directory to look for .yml files (default: scenarios/)
+
+EXAMPLES
+  # Push all scenarios in ./scenarios/
+  TTAI_PAT_TOKEN=xxx ttcli push
+
+  # Push a single file
+  ttcli push scenarios/cold-call.yml
+
+  # Pull a remote scenario into a file
+  ttcli pull 69577496bd7c000fa3f4fc2a scenarios/personality-test.yml
+
+  # Preview changes before pushing
+  ttcli diff scenarios/cold-call.yml
+
+  # Org-scoped usage
+  TTAI_ORG_ID=my-org ttcli list
+
+  # Delete a scenario
+  ttcli delete 69577496bd7c000fa3f4fc2a
+
+SCENARIO YAML FORMAT
+  See scenarios/example.yml for a fully annotated example.
+  All fields from the ToughTongue AI scenario schema are supported.
+
+HELP
+}
+
+# ------------------------------------------------------------------------------
+# Entrypoint
+# ------------------------------------------------------------------------------
+
+main() {
+  local cmd="${1:-help}"
+  shift || true
+
+  case "$cmd" in
+    list)   cmd_list ;;
+    push)   cmd_push "$@" ;;
+    pull)   cmd_pull "$@" ;;
+    diff)   cmd_diff "$@" ;;
+    delete) cmd_delete "$@" ;;
+    help|--help|-h) cmd_help ;;
+    version|--version|-v) echo "ttcli v${VERSION}" ;;
+    *) die "Unknown command: ${cmd}. Run 'ttcli help' for usage." ;;
+  esac
+}
+
+main "$@"

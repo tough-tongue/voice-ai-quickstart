@@ -86,9 +86,8 @@ function buildAssessmentSummary(reportCard: ReportCardItem[]): string {
     })
     .join(". ");
 
-  return `The user's MBTI personality has been assessed as ${type}. ${dimensionSummary}. ${
-    typeItem.note?.split("\n")[0] || ""
-  }`;
+  return `The user's MBTI personality has been assessed as ${type}. ${dimensionSummary}. ${typeItem.note?.split("\n")[0] || ""
+    }`;
 }
 
 function getPersonalityData(reportCard?: ReportCardItem[]) {
@@ -163,7 +162,7 @@ function ResultsContent() {
         completed_at: data.completed_at,
         user_name: data.user_name,
         user_email: data.user_email,
-        duration: data.duration,
+        duration: data.duration_minutes != null ? data.duration_minutes * 60 : undefined,
         finalized_transcript: data.finalized_transcript || data.transcript_content,
         evaluation_results: data.evaluation_results,
         improvement_results: data.improvement_results,
@@ -393,9 +392,8 @@ function SessionRow({
 }) {
   return (
     <tr
-      className={`border-b border-border/50 cursor-pointer hover:bg-muted/50 ${
-        isSelected ? "bg-teal-500/10" : ""
-      }`}
+      className={`border-b border-border/50 cursor-pointer hover:bg-muted/50 ${isSelected ? "bg-teal-500/10" : ""
+        }`}
       onClick={onSelect}
     >
       <td className="py-2 px-2">
@@ -812,9 +810,8 @@ function TranscriptLine({ line }: { line: string }) {
 
   return (
     <div
-      className={`p-3 rounded-lg text-sm ${
-        isAI ? "bg-teal-500/10 border border-teal-500/20" : "bg-background border border-border"
-      }`}
+      className={`p-3 rounded-lg text-sm ${isAI ? "bg-teal-500/10 border border-teal-500/20" : "bg-background border border-border"
+        }`}
     >
       <div className="flex items-center gap-2 mb-1">
         <span className={`text-xs font-medium ${isAI ? "text-teal-400" : "text-muted-foreground"}`}>
