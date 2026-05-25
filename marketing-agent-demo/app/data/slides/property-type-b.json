@@ -1,0 +1,105 @@
+{
+    "meta": {
+        "id": "property-type-b",
+        "name": "Type B — The Sky Penthouse",
+        "tagline": "Upper-floor residences with private terrace gardens.",
+        "description": "Upper-floor penthouses with private rooftop terrace gardens, double-height living, and uninterrupted views in three directions. Best for the connoisseur who wants altitude, privacy and outdoor entertaining.",
+        "useWhen": "Pitch when a client wants the highest possible vantage, terrace-led entertaining, and a residence that doubles as a vertical retreat. Often paired with private elevator lobby and concierge service.",
+        "cover": "/images/img233.jpg",
+        "accent": "#C5A059"
+    },
+    "slides": [
+        {
+            "id": "type-b-01",
+            "order": 1,
+            "eyebrow": "Type B",
+            "title": "The Sky Penthouse",
+            "subtitle": "Altitude, privacy and a sky one can step into.",
+            "body": "Reserved for the uppermost floors of the crowning tower, the Sky Penthouse rises above the surrounding green canopy — a residence where the boundary between interior and horizon is studied with care.",
+            "layout": "fullbleed",
+            "images": [
+                {
+                    "src": "/images/DLF-Camellias-19-10-1504.jpg",
+                    "alt": "The Camellias — upper tower elevation"
+                }
+            ],
+            "draft": true
+        },
+        {
+            "id": "type-b-02",
+            "order": 2,
+            "eyebrow": "The Terrace",
+            "title": "A garden in the sky.",
+            "body": "A private terrace garden wraps around the living wing — a landscape conceived for both intimate dinners and large gatherings, with shade structures, water features and integrated planters.",
+            "layout": "mosaic",
+            "images": [
+                {
+                    "src": "/images/1A1A9724.jpg",
+                    "alt": "Outdoor pool reflection"
+                },
+                {
+                    "src": "/images/events/sustainable_effort.jpg",
+                    "alt": "Towers reflecting at sunset"
+                },
+                {
+                    "src": "/images/img235.jpg",
+                    "alt": "Curved façade detail"
+                }
+            ],
+            "draft": true
+        },
+        {
+            "id": "type-b-03",
+            "order": 3,
+            "eyebrow": "Specifications",
+            "title": "Configuration & Areas",
+            "subtitle": "Indicative — to be confirmed with the sales team.",
+            "layout": "specsheet",
+            "images": [
+                {
+                    "src": "/images/img234.jpg",
+                    "alt": "Site plan — top view"
+                }
+            ],
+            "specs": [
+                { "label": "Configuration", "value": "5 BHK Penthouse + Family Lounge + Servant" },
+                { "label": "Built-up Area", "value": "~ 12,500", "unit": "sq ft" },
+                { "label": "Terrace Garden", "value": "~ 3,200", "unit": "sq ft" },
+                { "label": "Ceiling Height", "value": "Double-height living, 6.4", "unit": "m" },
+                { "label": "Aspects", "value": "North, East & South" },
+                { "label": "Parking", "value": "Six covered bays + valet bay" }
+            ],
+            "draft": true
+        },
+        {
+            "id": "type-b-04",
+            "order": 4,
+            "eyebrow": "The Living Volume",
+            "title": "Double-height. Single horizon.",
+            "body": "The living space opens upward across two storeys, framed by a 9-metre window wall. A floating mezzanine reads as a quiet library above — a calm counterpoint to the open volume below.",
+            "layout": "split",
+            "images": [
+                {
+                    "src": "/images/img235.jpg",
+                    "alt": "Material palette study"
+                }
+            ],
+            "draft": true
+        },
+        {
+            "id": "type-b-05",
+            "order": 5,
+            "eyebrow": "The Master Suite",
+            "title": "A suite with three windows of light.",
+            "body": "The master suite spans the corner — dressing room, ensuite spa, study and a private balcony each oriented differently. Mornings, afternoons and evenings are each given their own room.",
+            "layout": "hero",
+            "images": [
+                {
+                    "src": "/images/DLF-Camellias-19-10-1504.jpg",
+                    "alt": "Lighting design study"
+                }
+            ],
+            "draft": true
+        }
+    ]
+}

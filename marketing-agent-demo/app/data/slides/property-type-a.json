@@ -1,0 +1,105 @@
+{
+    "meta": {
+        "id": "property-type-a",
+        "name": "Type A — The Wraparound Residence",
+        "tagline": "Corner residences with panoramic golf-course frontage.",
+        "description": "Corner-positioned residences with wraparound terraces and dual aspects across the Golf Drive and the landscaped Sanctuary. Best for clients prioritising light, view depth and entertainment-led plans.",
+        "useWhen": "Pitch when a client prioritises corner positioning, dual aspect light, panoramic golf views, and a large entertainment-led floor plate. Most suited to families that host frequently.",
+        "cover": "/images/img235.jpg",
+        "accent": "#1A362D"
+    },
+    "slides": [
+        {
+            "id": "type-a-01",
+            "order": 1,
+            "eyebrow": "Type A",
+            "title": "The Wraparound Residence",
+            "subtitle": "Corner exposure. Two aspects. One quiet horizon.",
+            "body": "A corner positioning grants the residence two open elevations — golf course to the south, landscaped sanctuary to the east. Mornings arrive softly through the foyer; evenings settle across the living wing.",
+            "layout": "hero",
+            "images": [
+                {
+                    "src": "/images/img236.jpg",
+                    "alt": "Twin towers of The Camellias at golden hour"
+                }
+            ],
+            "draft": true
+        },
+        {
+            "id": "type-a-02",
+            "order": 2,
+            "eyebrow": "The Plan",
+            "title": "An open arrival, a private wing.",
+            "body": "Public spaces are carried along the south face — living, dining, lounge. The private wing folds inward, layered behind a soft transition foyer. Bedrooms each open to their own balcony or bay.",
+            "layout": "split",
+            "images": [
+                {
+                    "src": "/images/DLF-Camellias-19-10-1504.jpg",
+                    "alt": "Architectural envelope of a Type A residence"
+                }
+            ],
+            "draft": true
+        },
+        {
+            "id": "type-a-03",
+            "order": 3,
+            "eyebrow": "Specifications",
+            "title": "Configuration & Areas",
+            "subtitle": "Indicative — to be confirmed with the sales team.",
+            "layout": "specsheet",
+            "images": [
+                {
+                    "src": "/images/DLF-Camellias-19-05-13075.jpg",
+                    "alt": "Tower elevation"
+                }
+            ],
+            "specs": [
+                { "label": "Configuration", "value": "4 BHK + Lounge + Servant" },
+                { "label": "Built-up Area", "value": "~ 7,400", "unit": "sq ft" },
+                { "label": "Carpet (RERA)", "value": "~ 5,400", "unit": "sq ft" },
+                { "label": "Aspects", "value": "South & East" },
+                { "label": "Balconies", "value": "Three, including wraparound" },
+                { "label": "Parking", "value": "Four covered bays" }
+            ],
+            "draft": true
+        },
+        {
+            "id": "type-a-04",
+            "order": 4,
+            "eyebrow": "The Living Wing",
+            "title": "Light, gathered along the long edge.",
+            "body": "A 12-metre living edge runs uninterrupted along the south face. Sliding panels retract fully into wall recesses, dissolving the threshold between living room and wrap balcony.",
+            "layout": "mosaic",
+            "images": [
+                {
+                    "src": "/images/1A1A9724.jpg",
+                    "alt": "Pool deck with golden hour reflections"
+                },
+                {
+                    "src": "/images/img234.jpg",
+                    "alt": "Aerial of the property layout"
+                },
+                {
+                    "src": "/images/img233.jpg",
+                    "alt": "Detail of the curved façade"
+                }
+            ],
+            "draft": true
+        },
+        {
+            "id": "type-a-05",
+            "order": 5,
+            "eyebrow": "The Private Wing",
+            "title": "Four bedrooms. Four moods.",
+            "body": "Each bedroom is paired with its own dressing line, ensuite and outdoor extension. The master commands the corner — a quiet pivot point between the two open aspects.",
+            "layout": "split",
+            "images": [
+                {
+                    "src": "/images/DLF-Camellias-19-10-15-.jpg",
+                    "alt": "Lounge interior — material study"
+                }
+            ],
+            "draft": true
+        }
+    ]
+}

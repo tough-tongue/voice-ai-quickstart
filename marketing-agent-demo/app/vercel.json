@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/navigate-commands/[sessionId]/poll": {
+      "maxDuration": 30
+    }
+  }
+}
