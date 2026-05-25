@@ -36,6 +36,7 @@ export const AppConfig = {
     shortName: "Personality Lab",
     description: "Discover your MBTI personality type through AI-powered conversations",
     isDev: process.env.NEXT_PUBLIC_IS_DEV === "true",
+    url: process.env.NEXT_PUBLIC_APP_URL || "",
   },
 
   toughTongue: {

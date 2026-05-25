@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/* Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Figtree:wght@400;500;600&display=swap");
+
+/* ------------------------------------------------------------------------------
+   Design tokens
+   ------------------------------------------------------------------------------ */
+:root {
+  --bg-primary: #faf9f6;
+  --bg-secondary: #f0ebe1;
+  --text-primary: #2c302e;
+  --text-secondary: #59615d;
+  --accent-green: #1a362d;
+  --accent-gold: #c5a059;
+  --border-soft: #e5e0d5;
+
+  /* shadcn/ui compatible tokens */
+  --background: 42 33% 97%;
+  --foreground: 150 5% 18%;
+  --card: 42 33% 97%;
+  --card-foreground: 150 5% 18%;
+  --popover: 42 33% 97%;
+  --popover-foreground: 150 5% 18%;
+  --primary: 154 32% 16%;
+  --primary-foreground: 42 33% 97%;
+  --secondary: 38 30% 91%;
+  --secondary-foreground: 150 5% 18%;
+  --muted: 38 30% 91%;
+  --muted-foreground: 150 4% 38%;
+  --accent: 39 50% 56%;
+  --accent-foreground: 150 5% 18%;
+  --destructive: 0 60% 40%;
+  --destructive-foreground: 42 33% 97%;
+  --border: 38 25% 87%;
+  --input: 38 25% 87%;
+  --ring: 154 32% 16%;
+  --radius: 0.25rem;
+}
+
+/* ------------------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------------------ */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 18px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: "Figtree", system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  font-size: 1.06rem;
+  line-height: 1.65;
+}
+
+::selection {
+  background: #1a362d;
+  color: #faf9f6;
+}
+
+/* ------------------------------------------------------------------------------
+   Typography utilities
+   ------------------------------------------------------------------------------ */
+.font-serif-display {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+}
+
+.font-body {
+  font-family: "Figtree", sans-serif;
+}
+
+.overline {
+  font-family: "Figtree", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--accent-green);
+}
+
+/* ------------------------------------------------------------------------------
+   Animations
+   ------------------------------------------------------------------------------ */
+@keyframes kenburns {
+  0%   { transform: scale(1.08) translate3d(0, 0, 0); }
+  100% { transform: scale(1.18) translate3d(-1.5%, -1.5%, 0); }
+}
+.kenburns {
+  animation: kenburns 18s ease-in-out infinite alternate;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 38s linear infinite;
+}
+
+/* ------------------------------------------------------------------------------
+   Scroll reveal
+   ------------------------------------------------------------------------------ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------------------
+   UI utilities
+   ------------------------------------------------------------------------------ */
+.gold-divider {
+  width: 56px;
+  height: 1px;
+  background: var(--accent-gold);
+  display: inline-block;
+}
+
+.btn-hairline {
+  border: 1px solid var(--text-primary);
+  color: var(--text-primary);
+  padding: 0.9rem 1.85rem;
+  font-family: "Figtree", sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: background 0.45s ease, color 0.45s ease;
+  background: transparent;
+  cursor: pointer;
+}
+.btn-hairline:hover {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  color: var(--bg-primary);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

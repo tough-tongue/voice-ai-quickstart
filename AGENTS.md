@@ -1,4 +1,4 @@
-# ToughTongue AI — Docs & Starter Templates
+# voice-ai-quickstart — Agent Guide
 
 > Your work shall be judged by the **Code Commander** — a veteran engineer who
 > has shipped systems older than most frameworks. He is ruthlessly strict about
@@ -6,10 +6,10 @@
 > first production deploy at 2 AM, and he respects anyone willing to learn.
 > Mention him (directly or metaphorically) after code edits.
 
-Public documentation and starter templates for ToughTongue AI.
-Mintlify docs site · Next.js starter · Flask starter · Scenario manager.
+Starter templates and demos for integrating ToughTongue AI voice agents.
+Next.js starter · Flask starter · Marketing co-nav demo · Scenario manager.
 
-GitHub Info: `tough-tongue/tough-tongue-docs` (public)
+GitHub Info: `tough-tongue/voice-ai-quickstart` (public)
 Prod app: https://app.toughtongueai.com/ · Prod API: https://api.toughtongueai.com/
 
 ---
@@ -55,23 +55,27 @@ alternate credentials.
 ## Repo Layout
 
 ```
-tt-docs/
-├── docs/              Mintlify public docs site (deprecated)
-├── nextjs-minimal/    Next.js 16.1+ + Firebase starter app
-├── flask-minimal/     Flask + Preact minimal starter
-├── starter-prompts/   One-shot prompts for Lovable/v0/Bolt
-├── scenario-manager/  ttcli — YAML-driven scenario sync CLI
-└── _0ven/             Gitignored scratch (specs, AI notes)
+voice-ai-quickstart/
+├── marketing-agent-demo/  Voice AI co-navigation demo (flagship)
+│   └── app/               Next.js 15 app — deploy directly to Vercel
+├── nextjs-minimal/        Next.js 16.1+ + Firebase starter app
+├── flask-minimal/         Flask + Preact minimal starter
+├── starter-prompts/       One-shot prompts for Lovable/v0/Bolt
+├── scenario-manager/      ttcli — YAML-driven scenario sync CLI
+├── archived/
+│   └── mintlify-docs/     Mintlify docs site (archived — see README to reactivate)
+└── _0ven/                 Gitignored scratch (specs, AI notes)
 ```
 
 ### Area Guides
 
-| Area             | Guide                        | Scope                                     |
-| ---------------- | ---------------------------- | ----------------------------------------- |
-| Next.js starter  | `nextjs-minimal/AGENTS.md`   | App Router, Firebase, shadcn/ui, lib/ttai |
-| Flask starter    | `flask-minimal/AGENTS.md`    | Python server, Preact embed, API proxy    |
-| Scenario manager | `scenario-manager/README.md` | ttcli bash script, YAML schema, CI usage  |
-| Docs site        | `docs/AGENTS.md`             | Mintlify, MDX, docs.json (**deprecated**) |
+| Area             | Guide                              | Scope                                       |
+| ---------------- | ---------------------------------- | ------------------------------------------- |
+| Co-nav demo      | `marketing-agent-demo/README.md`   | Voice co-navigation, long-poll, TTAI wiring |
+| Next.js starter  | `nextjs-minimal/AGENTS.md`         | App Router, Firebase, shadcn/ui, lib/ttai   |
+| Flask starter    | `flask-minimal/AGENTS.md`          | Python server, Preact embed, API proxy      |
+| Scenario manager | `scenario-manager/README.md`       | ttcli bash script, YAML schema, CI usage    |
+| Mintlify docs    | `archived/mintlify-docs/README.md` | Archived — see README to reactivate         |
 
 ---
 
@@ -79,9 +83,9 @@ tt-docs/
 
 | Area            | Tech                                                                               |
 | --------------- | ---------------------------------------------------------------------------------- |
+| Co-nav demo     | Next.js 15, TypeScript, React 19, Tailwind 4, shadcn/ui, Vercel                    |
 | Next.js starter | Next.js 16.1+, TypeScript, React 19, Tailwind 4, Zustand, Firebase Auth, shadcn/ui |
 | Flask starter   | Python 3.9+, Flask 2.0+, Preact (no build tools), Vercel                           |
-| Docs            | Mintlify, MDX, docs.json nav contract (deprecated)                                 |
 
 ---
 
@@ -151,17 +155,20 @@ Every page and component file:
 
 ## Key Files
 
-| Path                                     | Purpose                                        |
-| ---------------------------------------- | ---------------------------------------------- |
-| `AGENTS.md`                              | This file — repo-wide agent rules              |
-| `AGENTS.local.md`                        | Machine-local overrides (gitignored)           |
-| `nextjs-minimal/AGENTS.md`               | Next.js starter area guide                     |
-| `flask-minimal/AGENTS.md`                | Flask starter area guide                       |
-| `docs/AGENTS.md`                         | Mintlify docs area guide (deprecated)          |
-| `starter-prompts/README.md`              | One-shot prompt index + integration reference  |
-| `scenario-manager/README.md`             | ttcli usage guide                              |
-| `scenario-manager/ttcli`                 | Bash CLI — push/pull/diff/list scenarios       |
-| `scenario-manager/scenarios/example.yml` | Annotated scenario YAML reference              |
-| `_0ven/specs/`                           | Design specs and briefs                        |
-| `nextjs-minimal/lib/ttai/`               | ToughTongue AI client library (types + client) |
-| `nextjs-minimal/lib/config.ts`           | Central env-var loader                         |
+| Path                                                     | Purpose                                        |
+| -------------------------------------------------------- | ---------------------------------------------- |
+| `AGENTS.md`                                              | This file — repo-wide agent rules              |
+| `AGENTS.local.md`                                        | Machine-local overrides (gitignored)           |
+| `marketing-agent-demo/README.md`                         | Co-nav demo — getting started guide            |
+| `marketing-agent-demo/app/lib/ttai.ts`                   | Scenario IDs + embed URL builder               |
+| `marketing-agent-demo/app/lib/command-store.ts`          | In-memory command store (swap for Redis)       |
+| `marketing-agent-demo/app/hooks/useNavigationSession.ts` | Session ID + long-poll hook                    |
+| `nextjs-minimal/AGENTS.md`                               | Next.js starter area guide                     |
+| `flask-minimal/AGENTS.md`                                | Flask starter area guide                       |
+| `starter-prompts/README.md`                              | One-shot prompt index + integration reference  |
+| `scenario-manager/README.md`                             | ttcli usage guide                              |
+| `scenario-manager/ttcli`                                 | Bash CLI — push/pull/diff/list scenarios       |
+| `scenario-manager/scenarios/example.yml`                 | Annotated scenario YAML reference              |
+| `_0ven/specs/`                                           | Design specs and briefs                        |
+| `nextjs-minimal/lib/ttai/`                               | ToughTongue AI client library (types + client) |
+| `nextjs-minimal/lib/config.ts`                           | Central env-var loader                         |

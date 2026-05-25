@@ -46,19 +46,21 @@ docs/
 ```yaml
 ---
 title: "Page Title"
-sidebarTitle: "Short Name"   # optional — different name in sidebar
+sidebarTitle: "Short Name" # optional — different name in sidebar
 description: "Brief description for SEO and cards"
 ---
 ```
 
 ### Mintlify Components
 
-```mdx
+````mdx
 <Note>Informational callout</Note>
 <Tip>Helpful suggestion</Tip>
 <Warning>Important caution</Warning>
 
-<Card title="Title" icon="icon-name" href="/path">Description</Card>
+<Card title="Title" icon="icon-name" href="/path">
+  Description
+</Card>
 
 <CardGroup cols={2}>
   <Card>...</Card>
@@ -67,15 +69,8 @@ description: "Brief description for SEO and cards"
 
 <Accordion title="Expandable section">Content here</Accordion>
 
-<CodeGroup>
-```bash Terminal
-command here
-```
-```python Python
-code here
-```
-</CodeGroup>
-```
+<CodeGroup>```bash Terminal command here ``` ```python Python code here ```</CodeGroup>
+````
 
 ### Line Length
 
@@ -97,8 +92,10 @@ description: "Create a new scenario"
 
 Parameter and example blocks:
 
-```mdx
-<ParamField body="name" type="string" required>Description here</ParamField>
+````mdx
+<ParamField body="name" type="string" required>
+  Description here
+</ParamField>
 
 <RequestExample>
 ```json
@@ -111,7 +108,7 @@ Parameter and example blocks:
 { "id": "scenario_123" }
 ```
 </ResponseExample>
-```
+````
 
 API playground config in `docs.json`:
 
@@ -138,6 +135,7 @@ API playground config in `docs.json`:
 4. Add frontmatter.
 
 Example — adding to the "Integration" group:
+
 - Navigation path: `developer/integration/new-page`
 - File: `docs/developer/integration/new-page.mdx`
 
@@ -187,6 +185,7 @@ pnpm dev   # localhost:3000 — do not run, user manages
 ```
 
 After any edit, verify:
+
 - Page renders (no disappearing content)
 - Navigation links work
 - Code blocks display correctly

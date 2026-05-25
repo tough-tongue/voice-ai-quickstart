@@ -68,12 +68,12 @@ import { buildEmbedUrl } from "@/lib/ttai";
 
 const url = buildEmbedUrl({
   scenarioId: "YOUR_SCENARIO_ID",
-  embedStyle: "basic",          // "full" | "basic" | "minimal"
+  embedStyle: "basic", // "full" | "basic" | "minimal"
   userName: user.displayName,
   userEmail: user.email,
   dynamicVariables: { t_role: "Senior Engineer" },
   hidePoweredBy: true,
-  maxDuration: 600,             // auto-end after 10 minutes
+  maxDuration: 600, // auto-end after 10 minutes
 });
 ```
 
@@ -92,10 +92,10 @@ import { createIframeEventListener } from "@/lib/ttai";
 
 useEffect(() => {
   return createIframeEventListener({
-    onStop:       ({ data }) => fetchAndStoreResults(data.session_id),
+    onStop: ({ data }) => fetchAndStoreResults(data.session_id),
     onTerminated: ({ data }) => markSessionTerminated(data.session_id),
-    onSubmit:     ({ data }) => router.push(`/results/${data.session_id}`),
-    onError:      ({ code, message }) => console.error(code, message),
+    onSubmit: ({ data }) => router.push(`/results/${data.session_id}`),
+    onError: ({ code, message }) => console.error(code, message),
   });
 }, []);
 ```
@@ -122,7 +122,7 @@ Use `POST /api/sessions/analyze` (legacy) only when you need synchronous results
 `GET /v2/sessions` returns evaluation scores + extraction results in one call:
 
 ```typescript
-import { listSessionsV2 } from "@/app/api/ttai/client";  // server-side only
+import { listSessionsV2 } from "@/app/api/ttai/client"; // server-side only
 const { sessions } = await listSessionsV2({ scenario_id, limit: 20 });
 // sessions[i].evaluation_score, .report_card, .extraction_results available
 ```
@@ -201,6 +201,8 @@ All `process.env` reads go through `lib/config.ts`. Never read env vars directly
 TOUGH_TONGUE_API_KEY=your_api_key          # server-side only — never NEXT_PUBLIC_
 NEXT_PUBLIC_USE_SAT=false                  # set true for private scenarios
 SAT_DURATION_HOURS=4                       # optional, default 4
+NEXT_PUBLIC_IS_DEV=false                   # set true on dev/preview deployments — disables SEO indexing
+NEXT_PUBLIC_APP_URL=https://your-domain.com  # canonical URL — used in sitemap.xml + robots.txt
 NEXT_PUBLIC_FIREBASE_API_KEY=...
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
@@ -232,6 +234,9 @@ pnpm lint     # run linter
 | `lib/ttai/client.ts`                     | Client-side: buildEmbedUrl, events, sendSessionNotes |
 | `lib/ttai/types.ts`                      | Iframe events, embed options, session types          |
 | `lib/ttai/index.ts`                      | Public barrel export                                 |
+| `app/robots.ts`                          | robots.txt — blocks all crawlers when isDev          |
+| `app/sitemap.ts`                         | sitemap.xml — empty when isDev                       |
+| `app/layout.tsx`                         | Root layout — injects noindex meta when isDev        |
 | `app/api/ttai/client.ts`                 | Server-side TTAI HTTP client (all API calls)         |
 | `app/api/sessions/post-process/route.ts` | V2 async post-process route (preferred)              |
 | `app/api/sessions/analyze/route.ts`      | Legacy synchronous analysis route                    |

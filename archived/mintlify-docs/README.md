@@ -1,4 +1,19 @@
-# ToughTongue AI Documentation - Developer Guide
+# ToughTongue AI Documentation — Mintlify Site (Archived)
+
+> **Archived.** Moved from `docs/` to `archived/mintlify-docs/` while the repo is
+> renamed to `voice-ai-quickstart`. Content is preserved and ready to re-activate.
+
+## To reactivate
+
+1. Move this directory back to `docs/` (or any path you prefer).
+2. In the [Mintlify dashboard](https://dashboard.mintlify.com), update the
+   **Repository source path** to match the new directory location.
+3. Optionally re-point `docs.toughtongueai.com` CNAME if DNS was removed.
+4. Run `pnpm install && pnpm dev` to verify locally before deploying.
+
+---
+
+# Developer Guide
 
 Welcome to the ToughTongue AI documentation repository. This is a [Mintlify](https://mintlify.com) documentation site with interactive API playground.
 

@@ -18,6 +18,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: AppConfig.app.name,
   description: AppConfig.app.description,
+  // Prevent indexing when running in dev/preview mode
+  ...(AppConfig.app.isDev && { robots: { index: false, follow: false } }),
 };
 
 export default function RootLayout({
