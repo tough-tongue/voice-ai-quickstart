@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Lock, LogOut, Wallet, Users, Compass } from "lucide-react";
+import { Lock, LogOut, Wallet, Users, Compass, LayoutDashboard, AlertTriangle } from "lucide-react";
+import { AppConfig } from "@/lib/config";
 import { AccountTab } from "./tabs/AccountTab";
 import { SessionsTab } from "./tabs/SessionsTab";
 import { CoNavTab } from "./tabs/CoNavTab";
+import { OverviewTab } from "./tabs/OverviewTab";
 
 const AUTH_KEY = "admin-auth-v1";
-const PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "changeme-in-prod";
+const { password: PASSWORD, isDefaultPassword: IS_DEFAULT } = AppConfig.admin;
 
 // login-gate -------------------------------------------------------------------
 
@@ -49,7 +51,37 @@ function LoginGate({ onLogin }: { onLogin: () => void }) {
         <button type="submit" className="btn-hairline self-start">
           Enter
         </button>
+        {IS_DEFAULT && (
+          <div className="border border-amber-300 bg-amber-50 px-4 py-3 text-xs text-amber-800 font-body">
+            <span className="font-semibold">Default password is active.</span>
+            {" "}Set{" "}
+            <code className="font-mono bg-amber-100 px-1">NEXT_PUBLIC_ADMIN_PASSWORD</code>
+            {" "}in your environment to secure this page.
+            <br />
+            <span className="text-amber-600 mt-1 block">
+              Current password:{" "}
+              <code className="font-mono">{PASSWORD}</code>
+            </span>
+          </div>
+        )}
       </form>
+    </div>
+  );
+}
+
+// default-password-banner ------------------------------------------------------
+
+function DefaultPasswordBanner() {
+  if (!IS_DEFAULT) return null;
+  return (
+    <div className="bg-amber-50 border-b border-amber-200 px-6 md:px-12 py-2.5 flex items-center gap-3 text-xs text-amber-800 font-body">
+      <AlertTriangle size={14} className="shrink-0 text-amber-500" />
+      <span>
+        <span className="font-semibold">Default password is active.</span>
+        {" "}Set{" "}
+        <code className="font-mono bg-amber-100 px-1">NEXT_PUBLIC_ADMIN_PASSWORD</code>
+        {" "}in your Vercel environment variables before sharing this URL.
+      </span>
     </div>
   );
 }
@@ -57,16 +89,17 @@ function LoginGate({ onLogin }: { onLogin: () => void }) {
 // admin-page -------------------------------------------------------------------
 
 const TABS = [
-  { id: "account", label: "TTAI Account", Icon: Wallet },
-  { id: "sessions", label: "Sessions", Icon: Users },
-  { id: "conav", label: "Co-Navigation", Icon: Compass },
+  { id: "overview",  label: "Overview",       Icon: LayoutDashboard },
+  { id: "account",   label: "TTAI Account",   Icon: Wallet },
+  { id: "sessions",  label: "Sessions",       Icon: Users },
+  { id: "conav",     label: "Co-Navigation",  Icon: Compass },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<TabId>("account");
+  const [tab, setTab] = useState<TabId>("overview");
 
   useEffect(() => {
     if (sessionStorage.getItem(AUTH_KEY) === "1") setAuthed(true);
@@ -81,6 +114,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#2C302E]">
+      <DefaultPasswordBanner />
       <header className="border-b border-[#E5E0D5] px-6 md:px-12 py-5 flex items-center justify-between">
         <h1 className="font-serif-display text-[#1A362D] text-2xl">
           Admin — The Camellias
@@ -112,9 +146,10 @@ export default function AdminPage() {
           ))}
         </nav>
 
-        {tab === "account" && <AccountTab />}
-        {tab === "sessions" && <SessionsTab />}
-        {tab === "conav" && <CoNavTab />}
+        {tab === "overview"  && <OverviewTab />}
+        {tab === "account"   && <AccountTab />}
+        {tab === "sessions"  && <SessionsTab />}
+        {tab === "conav"     && <CoNavTab />}
       </div>
     </div>
   );
