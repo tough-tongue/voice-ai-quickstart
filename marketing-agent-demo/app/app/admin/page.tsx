@@ -53,14 +53,12 @@ function LoginGate({ onLogin }: { onLogin: () => void }) {
         </button>
         {IS_DEFAULT && (
           <div className="border border-amber-300 bg-amber-50 px-4 py-3 text-xs text-amber-800 font-body">
-            <span className="font-semibold">Default password is active.</span>
-            {" "}Set{" "}
-            <code className="font-mono bg-amber-100 px-1">NEXT_PUBLIC_ADMIN_PASSWORD</code>
-            {" "}in your environment to secure this page.
+            <span className="font-semibold">Default password is active.</span> Set{" "}
+            <code className="font-mono bg-amber-100 px-1">NEXT_PUBLIC_ADMIN_PASSWORD</code> in your
+            environment to secure this page.
             <br />
             <span className="text-amber-600 mt-1 block">
-              Current password:{" "}
-              <code className="font-mono">{PASSWORD}</code>
+              Current password: <code className="font-mono">{PASSWORD}</code>
             </span>
           </div>
         )}
@@ -77,10 +75,9 @@ function DefaultPasswordBanner() {
     <div className="bg-amber-50 border-b border-amber-200 px-6 md:px-12 py-2.5 flex items-center gap-3 text-xs text-amber-800 font-body">
       <AlertTriangle size={14} className="shrink-0 text-amber-500" />
       <span>
-        <span className="font-semibold">Default password is active.</span>
-        {" "}Set{" "}
-        <code className="font-mono bg-amber-100 px-1">NEXT_PUBLIC_ADMIN_PASSWORD</code>
-        {" "}in your Vercel environment variables before sharing this URL.
+        <span className="font-semibold">Default password is active.</span> Set{" "}
+        <code className="font-mono bg-amber-100 px-1">NEXT_PUBLIC_ADMIN_PASSWORD</code> in your
+        Vercel environment variables before sharing this URL.
       </span>
     </div>
   );
@@ -89,10 +86,10 @@ function DefaultPasswordBanner() {
 // admin-page -------------------------------------------------------------------
 
 const TABS = [
-  { id: "overview",  label: "Overview",       Icon: LayoutDashboard },
-  { id: "account",   label: "TTAI Account",   Icon: Wallet },
-  { id: "sessions",  label: "Sessions",       Icon: Users },
-  { id: "conav",     label: "Co-Navigation",  Icon: Compass },
+  { id: "overview", label: "Overview", Icon: LayoutDashboard },
+  { id: "account", label: "TTAI Account", Icon: Wallet },
+  { id: "sessions", label: "Sessions", Icon: Users },
+  { id: "conav", label: "Co-Navigation", Icon: Compass },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -116,9 +113,7 @@ export default function AdminPage() {
     <div className="min-h-screen bg-[#FAF9F6] text-[#2C302E]">
       <DefaultPasswordBanner />
       <header className="border-b border-[#E5E0D5] px-6 md:px-12 py-5 flex items-center justify-between">
-        <h1 className="font-serif-display text-[#1A362D] text-2xl">
-          Admin — The Camellias
-        </h1>
+        <h1 className="font-serif-display text-[#1A362D] text-2xl">Admin — The Camellias</h1>
         <button
           onClick={logout}
           className="flex items-center gap-2 text-[#59615D] hover:text-[#2C302E] transition-colors text-sm"
@@ -146,10 +141,10 @@ export default function AdminPage() {
           ))}
         </nav>
 
-        {tab === "overview"  && <OverviewTab />}
-        {tab === "account"   && <AccountTab />}
-        {tab === "sessions"  && <SessionsTab />}
-        {tab === "conav"     && <CoNavTab />}
+        {tab === "overview" && <OverviewTab />}
+        {tab === "account" && <AccountTab />}
+        {tab === "sessions" && <SessionsTab />}
+        {tab === "conav" && <CoNavTab />}
       </div>
     </div>
   );
