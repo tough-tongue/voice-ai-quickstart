@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/navigate-commands/[sessionId]/poll": {
+    "app/api/navigate-commands/[sessionId]/poll/route.ts": {
       "maxDuration": 30
     }
   }

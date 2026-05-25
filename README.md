@@ -48,6 +48,8 @@ a session code + destination; the visitor's browser is already long-polling
 `/api/navigate-commands/:sessionId/poll` and navigates the moment it receives
 the command.
 
+**Live demo:** [ttai-marketing-agent-demo.vercel.app](https://ttai-marketing-agent-demo.vercel.app)
+
 → [Full integration guide](marketing-agent-demo/README.md)
 
 ---
@@ -67,6 +69,8 @@ pnpm dev
 
 **Includes:** Firebase email/Google auth · protected routes · iframe embed ·
 session analysis · API token proxy · Tailwind + shadcn/ui
+
+**Live demo:** [nextjs-ttai-starter-demo.vercel.app](https://nextjs-ttai-starter-demo.vercel.app)
 
 → [Setup guide](nextjs-minimal/AGENTS.md)
 
