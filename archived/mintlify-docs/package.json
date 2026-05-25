@@ -9,6 +9,6 @@
     "broken-links": "mintlify broken-links"
   },
   "devDependencies": {
-    "mintlify": "^4.0.359"
+    "mintlify": "^4.2.577"
   }
 }

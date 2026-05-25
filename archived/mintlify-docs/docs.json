@@ -106,16 +106,21 @@
                   "api-reference/endpoints/scenarios/list-scenarios",
                   "api-reference/endpoints/scenarios/get-scenario",
                   "api-reference/endpoints/scenarios/create-scenario",
-                  "api-reference/endpoints/scenarios/list-featured-scenarios"
+                  "api-reference/endpoints/scenarios/list-featured-scenarios",
+                  "api-reference/endpoints/scenarios/generate-advanced",
+                  "api-reference/endpoints/scenarios/browser-authenticate"
                 ]
               },
               {
                 "group": "Sessions",
                 "pages": [
                   "api-reference/endpoints/sessions/list-sessions",
+                  "api-reference/endpoints/sessions/list-sessions-v2",
                   "api-reference/endpoints/sessions/get-session",
+                  "api-reference/endpoints/sessions/get-sessions-batch",
+                  "api-reference/endpoints/sessions/create-session",
                   "api-reference/endpoints/sessions/analyze-session",
-                  "api-reference/endpoints/sessions/list-sessions-v2"
+                  "api-reference/endpoints/sessions/post-process-session"
                 ]
               },
               {
@@ -159,7 +164,14 @@
                 "group": "Utilities",
                 "pages": [
                   "api-reference/endpoints/utilities/test-token",
-                  "api-reference/endpoints/utilities/create-access-token"
+                  "api-reference/endpoints/utilities/create-access-token",
+                  "api-reference/endpoints/utilities/create-self-sat"
+                ]
+              },
+              {
+                "group": "Organizations",
+                "pages": [
+                  "api-reference/endpoints/organizations/list-organizations"
                 ]
               }
             ]
@@ -203,7 +215,7 @@
     "socials": {
       "discord": "https://discord.com/invite/NfTPT3HsSj",
       "linkedin": "https://www.linkedin.com/company/tough-tongue-ai/",
-      "github": "https://github.com/tough-tongue/docs"
+      "github": "https://github.com/tough-tongue/voice-ai-quickstart"
     }
   }
 }
