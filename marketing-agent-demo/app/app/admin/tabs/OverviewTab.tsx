@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Radio,
-  Globe,
-  Webhook,
-  Clock,
-  Code2,
-  KeyRound,
-  BookOpen,
-  ArrowRight,
-} from "lucide-react";
+import { Radio, Globe, Webhook, Clock, Code2, KeyRound, BookOpen, ArrowRight } from "lucide-react";
 
 // overview-tab -----------------------------------------------------------------
 
@@ -54,19 +45,14 @@ function HowItWorksSection() {
       <h2 className="overline text-[#1A362D] mb-6">How co-navigation works</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {STEPS.map(({ Icon, title, body }) => (
-          <div
-            key={title}
-            className="border border-[#E5E0D5] p-6 flex flex-col gap-3"
-          >
+          <div key={title} className="border border-[#E5E0D5] p-6 flex flex-col gap-3">
             <div className="flex items-center gap-3">
               <Icon size={16} className="text-[#1A362D] shrink-0" />
               <span className="font-body text-[13px] font-semibold tracking-wide text-[#1A362D]">
                 {title}
               </span>
             </div>
-            <p className="font-body text-sm text-[#59615D] leading-relaxed">
-              {body}
-            </p>
+            <p className="font-body text-sm text-[#59615D] leading-relaxed">{body}</p>
           </div>
         ))}
       </div>
@@ -166,7 +152,10 @@ function EnvSection() {
       <h2 className="overline text-[#1A362D] mb-6">Environment variables</h2>
       <div className="border border-[#E5E0D5] divide-y divide-[#E5E0D5]">
         {ENV_VARS.map(({ name, required, note, where }) => (
-          <div key={name} className="px-5 py-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
+          <div
+            key={name}
+            className="px-5 py-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-6"
+          >
             <div className="flex items-center gap-2 shrink-0">
               <KeyRound size={13} className="text-[#59615D]" />
               <code className="font-mono text-xs text-[#2C302E]">{name}</code>
@@ -195,8 +184,8 @@ function EnvSection() {
               marketing-agent-demo/app/.env.example
             </code>{" "}
             with all variables documented. Copy it to{" "}
-            <code className="font-mono text-xs bg-[#F5F3EE] px-1">.env.local</code>{" "}
-            for local development.
+            <code className="font-mono text-xs bg-[#F5F3EE] px-1">.env.local</code> for local
+            development.
           </p>
         </div>
       </div>

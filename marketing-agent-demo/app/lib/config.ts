@@ -24,21 +24,17 @@ export const AppConfig = {
   admin: {
     password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD || DEFAULT_PASSWORD,
     isDefaultPassword:
-      (process.env.NEXT_PUBLIC_ADMIN_PASSWORD || DEFAULT_PASSWORD) ===
-      DEFAULT_PASSWORD,
+      (process.env.NEXT_PUBLIC_ADMIN_PASSWORD || DEFAULT_PASSWORD) === DEFAULT_PASSWORD,
   },
 
   // Server-side only — never expose in client code
   toughTongue: {
     apiToken: process.env.TOUGHTONGUE_API_TOKEN || "",
-    apiBase:
-      process.env.TOUGHTONGUE_API_BASE ||
-      "https://app.toughtongueai.com/api/public",
+    apiBase: process.env.TOUGHTONGUE_API_BASE || "https://app.toughtongueai.com/api/public",
   },
 } as const;
 
 // ------------------------------------------------------------------------------
 // Guard helpers
 // ------------------------------------------------------------------------------
-export const isToughTongueConfigured = (): boolean =>
-  AppConfig.toughTongue.apiToken !== "";
+export const isToughTongueConfigured = (): boolean => AppConfig.toughTongue.apiToken !== "";
